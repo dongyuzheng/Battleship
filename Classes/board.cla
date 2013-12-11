@@ -1,0 +1,76 @@
+unit
+class Board
+    export setBL, setCellLW, setWantXY, DrawBoard, GetColumn, GetRow, setDrawCR, setImage, DrawCell
+
+    var BLX, BLY, CellLW, WantX, WantY, DrawCol, DrawRow : int := 1
+    var Image : string := "" %image to draw's location
+
+    proc setDrawCR (inputX, inputY : int) %set set draw location
+	DrawCol := inputX
+	DrawRow := inputY
+    end setDrawCR
+
+    proc setImage (input : string) %set the picture to draw to a cell
+	Image := input
+    end setImage
+
+    proc setBL (inputX, inputY : int) %set bottom left of grid
+	BLX := inputX
+	BLY := inputY
+
+    end setBL
+
+    proc setCellLW (input : int) %set pixel x and pixel y for each cell
+	CellLW := input
+    end setCellLW
+
+    proc setWantXY (inputX, inputY : int) %set get column/row pixel
+	WantX := inputX
+	WantY := inputY
+    end setWantXY
+
+    proc DrawBoard %draws the board
+	const xLength : int := 11 * CellLW
+	const yLength : int := 11 * CellLW
+	for x : CellLW .. xLength by CellLW
+	    Draw.Line (x + BLX, CellLW + BLY, x + BLX, yLength + BLY, white)
+	end for
+	for y : CellLW .. yLength by CellLW
+	    Draw.Line (CellLW + BLX, y + BLY, xLength + BLX, y + BLY, white)
+	end for
+    end DrawBoard
+
+    proc DrawCell %draws an image into a cell
+	const BottomLeftX : int := (CellLW * DrawCol) + 1 + BLX
+	const BottomLeftY : int := (CellLW * (11 - DrawRow)) + 1 + BLY
+	%put DrawCol, ", ", DrawRow, " = (", BottomLeftX, ", ", BottomLeftY, ") = ", Image
+	var DrawThis := Pic.FileNew (Image)
+	Pic.Draw (DrawThis, BottomLeftX, BottomLeftY, 0)
+	Pic.Free (DrawThis)
+    end DrawCell
+
+    fcn GetColumn : int %gets which column a pixel is from
+	const xLength : int := 10 * CellLW
+	var counter : int := 1
+	for x : CellLW .. xLength by CellLW
+	    if WantX > x + BLX and WantX < x + BLX + CellLW then
+		result counter
+	    end if
+	    counter += 1
+	end for
+	result 0
+    end GetColumn
+
+    fcn GetRow : int %gets which row a pixel is from
+	const yLength : int := 10 * CellLW
+	var counter : int := 1
+	for decreasing y : yLength .. CellLW by CellLW
+	    if WantY > y + BLY and WantY < y + BLY + CellLW then
+		result counter
+	    end if
+	    counter += 1
+	end for
+	result 0
+    end GetRow
+end Board
+

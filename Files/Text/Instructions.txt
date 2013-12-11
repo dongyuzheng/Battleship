@@ -1,0 +1,5 @@
+Place down your ships.
+No diagonal or overlapping placements.
+Click on enemy grid to attack.
+Destroy all enemy ships to win.
+Good luck commander!
